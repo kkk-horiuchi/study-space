@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "VPC and Internet Gateway Template"
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: "MyProject"
+    Description: "Project name for resource naming"
+  VpcCidr:
+    Type: String
+    Default: "10.0.0.0/16"
+    Description: "CIDR block for VPC"
+
+# VPCの定義
+Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-VPC"
+
+# インターネットゲートウェイとアタッチ
+  MyInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-IGW"
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyInternetGateway
+
+# 出力セクション
+Outputs:
+  VPCId:
+    Description: "VPC ID"
+    Value: !Ref MyVPC
+    Export:
+      Name: !Sub "${ProjectName}-VPC-ID"
+  InternetGatewayId:
+    Description: "Internet Gateway ID"
+    Value: !Ref MyInternetGateway
+    Export:
+      Name: !Sub "${ProjectName}-IGW-ID"
