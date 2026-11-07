@@ -1,0 +1,4 @@
+AWSTemplateFormatVersion "2010-09-090"
+
+Description: "WORK4 EC2 Test Resource Template"
+
